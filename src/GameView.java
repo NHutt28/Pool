@@ -4,8 +4,8 @@ import java.awt.*;
 public class GameView extends JFrame {
 
 
-    private final int WINDOW_WIDTH = 1000;
-    private final int WINDOW_HEIGHT = 800;
+    public final int WINDOW_WIDTH = 1000;
+    public final int WINDOW_HEIGHT = 800;
     private final int TITLE_BAR_HEIGHT = 23;
     private Game pool;
     private Image table;

@@ -14,7 +14,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private int state;
     private Timer clock;
 
-    private final double friction = 0.98;
 
     private GameView window;
 
