@@ -1,6 +1,9 @@
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.*;
 import java.util.ArrayList;
 
-public class Game {
+public class Game implements MouseListener, MouseMotionListener, ActionListener {
 
     private final int NUM_BALLS = 16;
 
@@ -9,16 +12,20 @@ public class Game {
     private ArrayList<Ball> balls;
     private ArrayList<pocket> holes;
     private int state;
+    private Timer clock;
 
     private final double friction = 0.98;
 
     private GameView window;
 
-    public Game(ArrayList<pocket> holes, ArrayList<Ball> balls, Ball white) {
-        this.holes = holes;
-        this.white = white;
-        this.balls = balls;
+    public Game() {
+        this.holes = new ArrayList<pocket>();
+        this.white = new Ball(10,10,5, Color.WHITE);
+        this.balls = new ArrayList<Ball>();
         this.state = 0;
+        clock = new Timer(20, this);
+        clock.start();
+        window = new GameView(this);
     }
 
     // Getters and Setters
@@ -55,6 +62,48 @@ public class Game {
     public boolean checkHitPocket(Ball ball)
     {
         return false;
+    }
+
+
+    // All implemented methods
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        window.repaint();
+    }
+
+    @Override
+    public void mouseClicked(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mousePressed(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseReleased(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseEntered(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseExited(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseDragged(MouseEvent e) {
+
+    }
+
+    @Override
+    public void mouseMoved(MouseEvent e) {
+
     }
 }
 

@@ -11,13 +11,12 @@ public class GameView extends JFrame {
     private Image table;
     private Cue stick;
 
-    public GameView(Game game, Cue stick) {
+    public GameView(Game game) {
         this.pool = game;
-        this.stick = stick;
 
 
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
-        this.setTitle("The Aquarium");
+        this.setTitle("The Table");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
     }
