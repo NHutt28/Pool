@@ -25,7 +25,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         //   balls.add(new Ball(10,10,5, i, window));
         // }
         this.state = 0;
-        clock = new Timer(70, this);
+        clock = new Timer(40, this);
         clock.start();
     }
 

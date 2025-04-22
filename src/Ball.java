@@ -6,7 +6,7 @@ public class Ball {
     private int x, y;
     private int dx, dy;
     private double angle;
-    private int speed;
+    private long speed;
     private boolean hasPocketed;
     private boolean isSolid;
     private int number;
@@ -29,8 +29,8 @@ public class Ball {
     public Ball(int x, int y, int radius, GameView window) {
         this.x = x;
         this.y = y;
-        this.dx = 30;
-        this.dy = 30;
+        this.dx = 50;
+        this.dy = 50;
         this.size = radius;
         this.hasPocketed = false;
         ballDraw = new ImageIcon("Resources/White Ball.png").getImage();
@@ -106,13 +106,20 @@ public class Ball {
     public void addFriction()
     {
         // Pythagorean triangle
-        speed = (int) Math.sqrt((dx*dx) + dy*dy);
-        speed *= 0.9;
+        //speed = (int) Math.sqrt((dx*dx) + dy*dy);
+        //speed *= 0.9;
+        speed = (long) Math.sqrt((dx*dx) + dy*dy) ;
+        speed *= 0.98;
         if (Math.abs(speed) < 0.5)
         {
-            speed = 0;
             dx = 0;
             dy = 0;
+        }
+        else
+        {
+            angle = Math.atan2(dy, dx);
+            dx = (int)(Math.cos(angle) * speed);
+            dy = (int)(Math.sin(angle) * speed);
         }
     }
 
@@ -144,7 +151,7 @@ public class Ball {
             }
             dy *= -1;
         }
-        angle = Math.atan2( dx, dy);
+        angle = Math.atan2(dy, dx);
     }
     public void bounceOffBall(Ball collided)
     {

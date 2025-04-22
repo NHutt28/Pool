@@ -25,7 +25,7 @@ public class GameView extends JFrame {
         this.setTitle("The Table");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
         this.setVisible(true);
-        createBufferStrategy(2);
+        createBufferStrategy(1);
     }
 
     // To draw - even animation
