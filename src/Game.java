@@ -13,18 +13,20 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private ArrayList<pocket> holes;
     private int state;
     private Timer clock;
-
-
     private GameView window;
 
     public Game() {
-        this.holes = new ArrayList<pocket>();
-        this.white = new Ball(10,10,5, Color.WHITE);
-        this.balls = new ArrayList<Ball>();
-        this.state = 0;
-        clock = new Timer(20, this);
-        clock.start();
+
         window = new GameView(this);
+        this.holes = new ArrayList<pocket>();
+        this.white = new Ball(300,200,10, window);
+        this.balls = new ArrayList<Ball>();
+        // for (int i = 1; i < 16; i++) {
+        //   balls.add(new Ball(10,10,5, i, window));
+        // }
+        this.state = 0;
+        clock = new Timer(70, this);
+        clock.start();
     }
 
     // Getters and Setters
@@ -52,6 +54,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         this.holes = holes;
     }
 
+    public Ball getWhite() {
+        return white;
+    }
+
+    public void setWhite(Ball white) {
+        this.white = white;
+    }
+
     // Plays the actual game - allows people to hit balls
     public void playGame()
     {
@@ -67,6 +77,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     // All implemented methods
     @Override
     public void actionPerformed(ActionEvent e) {
+        white.move();
         window.repaint();
     }
 
