@@ -30,7 +30,7 @@ public class Ball {
         this.x = x;
         this.y = y;
         this.dx = 50;
-        this.dy = 35;
+        this.dy = 23;
         this.size = radius;
         this.hasPocketed = false;
         ballDraw = new ImageIcon("Resources/White Ball.png").getImage();
@@ -178,11 +178,11 @@ public class Ball {
         {
             this.hasPocketed = true;
         }
-        else if ((Math.abs(x - 430) <= size) && y - size < window.TABLE_TOP)
+        else if ((Math.abs(x - 430) <= size + 5) && y - size < window.TABLE_TOP)
         {
             this.hasPocketed = true;
         }
-        else if ((Math.abs(x - 430) <= size) && y + size > window.TABLE_BOTTOM)
+        else if ((Math.abs(x - 430) <= size + 5) && y + size > window.TABLE_BOTTOM)
         {
             this.hasPocketed = true;
         }

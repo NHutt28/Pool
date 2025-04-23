@@ -13,6 +13,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private int state;
     private Timer clock;
     private GameView window;
+    private int startX, startY, releaseX, releaseY;
+    private boolean moving;
 
     public Game() {
 
@@ -22,6 +24,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         // for (int i = 1; i < 16; i++) {
         //   balls.add(new Ball(10,10,5, i, window));
         // }
+        this.window.addMouseListener(this);
+        this.window.addMouseMotionListener(this);
         this.state = 0;
         clock = new Timer(40, this);
         clock.start();
@@ -58,11 +62,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     }
 
-    public boolean checkHitPocket(Ball ball)
-    {
-        return false;
-    }
-
 
     // All implemented methods
     @Override
@@ -79,10 +78,29 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mousePressed(MouseEvent e) {
 
+        if(Math.sqrt((e.getX()-white.getX())*(e.getX()-white.getX())+((e.getY()-white.getY())*(e.getY()-white.getY()))) < white.getSize())
+        {
+            moving = true;
+            startX = e.getX();
+            startY = e.getY();
+        }
+        else
+        {
+            moving = false;
+        }
+        window.repaint();
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
+
+        if(moving) {
+            releaseY = e.getY();
+            releaseX = e.getX();
+            white.setDy(startY - releaseY);
+            white.setDx(startX - releaseX);
+        }
+
 
     }
 
