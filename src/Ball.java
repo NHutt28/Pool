@@ -30,7 +30,7 @@ public class Ball {
         this.x = x;
         this.y = y;
         this.dx = 50;
-        this.dy = 50;
+        this.dy = 35;
         this.size = radius;
         this.hasPocketed = false;
         ballDraw = new ImageIcon("Resources/White Ball.png").getImage();
@@ -99,6 +99,7 @@ public class Ball {
     {
         this.x += dx;
         this.y += dy;
+        isPocketed();
         bounceOffWall();
         this.addFriction();
     }
@@ -126,6 +127,10 @@ public class Ball {
     // Ball bounces off different things
     public void bounceOffWall()
     {
+        if(hasPocketed)
+        {
+            return;
+        }
         if (x - size < window.TABLE_LEFT || x + size > window.TABLE_RIGHT)
         {
             // Reflects
@@ -153,6 +158,36 @@ public class Ball {
         }
         angle = Math.atan2(dy, dx);
     }
+
+    public boolean isPocketed()
+    {
+        if(y - size < window.TABLE_TOP && x + size > window.TABLE_RIGHT)
+        {
+
+            this.hasPocketed = true;
+        }
+        else if(y - size < window.TABLE_TOP && x - size < window.TABLE_LEFT)
+        {
+            this.hasPocketed = true;
+        }
+        else if(y + size > window.TABLE_BOTTOM && x + size > window.TABLE_RIGHT)
+        {
+            this.hasPocketed = true;
+        }
+        else if(y + size > window.TABLE_BOTTOM && x - size < window.TABLE_LEFT)
+        {
+            this.hasPocketed = true;
+        }
+        else if ((Math.abs(x - 430) <= size) && y - size < window.TABLE_TOP)
+        {
+            this.hasPocketed = true;
+        }
+        else if ((Math.abs(x - 430) <= size) && y + size > window.TABLE_BOTTOM)
+        {
+            this.hasPocketed = true;
+        }
+        return hasPocketed;
+    }
     public void bounceOffBall(Ball collided)
     {
 
@@ -160,6 +195,13 @@ public class Ball {
     // Draw
     public void draw(Graphics g)
     {
-        g.drawImage(ballDraw, x - size, y - size, 2 * size, 2 * size, window);
+        if(!hasPocketed)
+        {
+            g.drawImage(ballDraw, x - size, y - size, 2 * size, 2 * size, window);
+        }
+        else
+        {
+
+        }
     }
 }

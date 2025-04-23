@@ -10,7 +10,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private Ball black;
     private Ball white;
     private ArrayList<Ball> balls;
-    private ArrayList<pocket> holes;
     private int state;
     private Timer clock;
     private GameView window;
@@ -18,7 +17,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public Game() {
 
         window = new GameView(this);
-        this.holes = new ArrayList<pocket>();
         this.white = new Ball(300,200,10, window);
         this.balls = new ArrayList<Ball>();
         // for (int i = 1; i < 16; i++) {
@@ -44,14 +42,6 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     public void setBalls(ArrayList<Ball> balls) {
         this.balls = balls;
-    }
-
-    public ArrayList<pocket> getHoles() {
-        return holes;
-    }
-
-    public void setHoles(ArrayList<pocket> holes) {
-        this.holes = holes;
     }
 
     public Ball getWhite() {
