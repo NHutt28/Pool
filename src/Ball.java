@@ -18,8 +18,8 @@ public class Ball {
     public Ball(int x, int y, int radius, int number, GameView window) {
         this.x = x;
         this.y = y;
-        this.dx = 20;
-        this.dy = 20;
+        this.dx = 0;
+        this.dy = 0;
         this.size = radius;
         this.hasPocketed = false;
         this.number = number;
@@ -29,8 +29,8 @@ public class Ball {
     public Ball(int x, int y, int radius, GameView window) {
         this.x = x;
         this.y = y;
-        this.dx = 50;
-        this.dy = 23;
+        this.dx = 0;
+        this.dy = 0;
         this.size = radius;
         this.hasPocketed = false;
         ballDraw = new ImageIcon("Resources/White Ball.png").getImage();
@@ -100,8 +100,8 @@ public class Ball {
         this.x += dx;
         this.y += dy;
         isPocketed();
-        bounceOffWall();
         this.addFriction();
+        bounceOffWall();
     }
     // Makes sure speed slows every time
     public void addFriction()
@@ -110,7 +110,7 @@ public class Ball {
         //speed = (int) Math.sqrt((dx*dx) + dy*dy);
         //speed *= 0.9;
         speed = (long) Math.sqrt((dx*dx) + dy*dy) ;
-        speed *= 0.98;
+        speed *= 0.983;
         if (Math.abs(speed) < 0.5)
         {
             dx = 0;
@@ -178,11 +178,11 @@ public class Ball {
         {
             this.hasPocketed = true;
         }
-        else if ((Math.abs(x - 430) <= size + 5) && y - size < window.TABLE_TOP)
+        else if ((Math.abs(x - 430) <= size + 20) && y - size < window.TABLE_TOP - 5)
         {
             this.hasPocketed = true;
         }
-        else if ((Math.abs(x - 430) <= size + 5) && y + size > window.TABLE_BOTTOM)
+        else if ((Math.abs(x - 430) <= size + 20) && y + size > window.TABLE_BOTTOM + 5)
         {
             this.hasPocketed = true;
         }
@@ -190,6 +190,10 @@ public class Ball {
     }
     public void bounceOffBall(Ball collided)
     {
+        if(this.hasPocketed || collided.hasPocketed)
+        {
+            return;
+        }
 
     }
     // Draw
@@ -198,10 +202,6 @@ public class Ball {
         if(!hasPocketed)
         {
             g.drawImage(ballDraw, x - size, y - size, 2 * size, 2 * size, window);
-        }
-        else
-        {
-
         }
     }
 }

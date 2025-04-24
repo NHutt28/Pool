@@ -15,12 +15,13 @@ public class GameView extends JFrame {
 
     private Game pool;
     private Image table;
-    private Cue stick;
+    private Image stick;
 
     public GameView(Game game) {
         this.pool = game;
 
         table = new ImageIcon("Resources/Pool table.png").getImage();
+        stick = new ImageIcon("Resources/cuestick.png").getImage();
         this.setDefaultCloseOperation(EXIT_ON_CLOSE);
         this.setTitle("The Table");
         this.setSize(WINDOW_WIDTH, WINDOW_HEIGHT);
@@ -49,11 +50,20 @@ public class GameView extends JFrame {
     // Redrawing the balls
     public void myPaint(Graphics g)
     {
+        g.setColor(Color.BLACK);
+        g.fillRect(0,0, WINDOW_WIDTH, WINDOW_HEIGHT);
         g.drawImage(table, 0,TITLE_BAR_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, this);
         pool.getWhite().draw(g);
         for (Ball b: pool.getBalls())
         {
             b.draw(g);
         }
+        if(pool.isMoving())
+        {
+            g.setColor(Color.red);
+            g.drawLine(pool.getWhite().getX() + 1, pool.getWhite().getY() + 1, pool.getReleaseX() + 1, pool.getReleaseY()+1);
+            g.drawLine(pool.getWhite().getX(), pool.getWhite().getY(), pool.getReleaseX(), pool.getReleaseY());
+            g.setColor(Color.black);
+       }
     }
 }

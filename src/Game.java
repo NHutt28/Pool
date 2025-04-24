@@ -19,11 +19,23 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public Game() {
 
         window = new GameView(this);
-        this.white = new Ball(300,200,10, window);
+        this.white = new Ball(250,280,12, window);
         this.balls = new ArrayList<Ball>();
-        // for (int i = 1; i < 16; i++) {
-        //   balls.add(new Ball(10,10,5, i, window));
-        // }
+
+        for (int i = 1; i < 16; i++) {
+            balls.add(new Ball(0,0,12, i, window));
+        }
+
+        for(int i = 1; i < 6; i++)
+        {
+            for(int j = 0; j < i; j++)
+            {
+                balls.get(i*(i-1) / 2 + j).setX(620 + (int) Math.sqrt(3) *(i * 16));
+                balls.get(i*(i-1) / 2 + j).setY(280 - (i*10) + (j * 20));
+            }
+
+        }
+
         this.window.addMouseListener(this);
         this.window.addMouseMotionListener(this);
         this.state = 0;
@@ -48,6 +60,39 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         this.balls = balls;
     }
 
+    public int getReleaseX() {
+        return releaseX;
+    }
+
+    public int getReleaseY() {
+        return releaseY;
+    }
+
+
+    public boolean isMoving() {
+        return moving;
+    }
+
+    public void setMoving(boolean moving) {
+        this.moving = moving;
+    }
+
+    public int getStartX() {
+        return startX;
+    }
+
+    public void setStartX(int startX) {
+        this.startX = startX;
+    }
+
+    public int getStartY() {
+        return startY;
+    }
+
+    public void setStartY(int startY) {
+        this.startY = startY;
+    }
+
     public Ball getWhite() {
         return white;
     }
@@ -67,6 +112,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
         white.move();
+        for(Ball b: balls)
+        {
+            b.move();
+        }
         window.repaint();
     }
 
@@ -78,6 +127,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mousePressed(MouseEvent e) {
 
+        releaseX = white.getX();
+        releaseY = white.getY();
         if(Math.sqrt((e.getX()-white.getX())*(e.getX()-white.getX())+((e.getY()-white.getY())*(e.getY()-white.getY()))) < white.getSize())
         {
             moving = true;
@@ -100,7 +151,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             white.setDy(startY - releaseY);
             white.setDx(startX - releaseX);
         }
-
+        moving = false;
 
     }
 
@@ -117,6 +168,11 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mouseDragged(MouseEvent e) {
 
+        if(moving)
+        {
+            releaseY = e.getY();
+            releaseX = e.getX();
+        }
     }
 
     @Override
