@@ -194,6 +194,24 @@ public class Ball {
         {
             return;
         }
+        int minDistanceBetween = collided.getSize() + this.getSize();
+        int xCollisionNum = collided.getX() - this.getX();
+        int yCollisionNum = collided.getY() - this.getY();
+
+        int distance = (int) Math.sqrt(xCollisionNum * xCollisionNum + yCollisionNum * yCollisionNum);
+        if(distance < minDistanceBetween)
+        {
+            int tempDx = this.getDx();
+            int tempDy = this.getDy();
+            this.setDy(collided.getDy());
+            this.setDx(collided.getDx());
+            collided.setDy(tempDy);
+            collided.setDx(tempDx);
+        }
+
+        int overlap = (minDistanceBetween - distance) / 2;
+
+
 
     }
     // Draw

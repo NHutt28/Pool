@@ -115,6 +115,11 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         for(Ball b: balls)
         {
             b.move();
+            white.bounceOffBall(b);
+            for(int i = 0; i < balls.size(); i++ )
+            {
+                b.bounceOffBall(balls.get(i));
+            }
         }
         window.repaint();
     }
