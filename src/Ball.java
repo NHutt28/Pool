@@ -178,41 +178,122 @@ public class Ball {
         {
             this.hasPocketed = true;
         }
-        else if ((Math.abs(x - 430) <= size + 20) && y - size < window.TABLE_TOP - 5)
+        else if ((Math.abs(x - 420) <= size + 10) && y - size < window.TABLE_TOP + 5)
         {
             this.hasPocketed = true;
         }
-        else if ((Math.abs(x - 430) <= size + 20) && y + size > window.TABLE_BOTTOM + 5)
+        else if ((Math.abs(x - 420) <= size + 10) && y + size > window.TABLE_BOTTOM -5)
         {
             this.hasPocketed = true;
         }
         return hasPocketed;
     }
+
+    /**
+     * ChatGPT coded this, my attempt is commented out
+     * @param collided
+     */
     public void bounceOffBall(Ball collided)
     {
-        if(this.hasPocketed || collided.hasPocketed)
-        {
+//
+//        if (this.dx == 0 && this.dy == 0 && collided.dx == 0 && collided.dy == 0) {
+//            return;
+//        }
+//        boolean firstMoving = (this.dx != 0 || this.dy != 0);
+//        boolean secondMoving = (collided.dx != 0 || collided.dy != 0);
+//
+//        int minDistanceBetween = collided.getSize() + this.getSize();
+//        int xCollisionNum = collided.getX() - this.getX();
+//        int yCollisionNum = collided.getY() - this.getY();
+//
+//
+//        int distance = (int) Math.sqrt((xCollisionNum * xCollisionNum) + (yCollisionNum * yCollisionNum));
+//            if (distance < minDistanceBetween && distance !=0) {
+//                double overlap = minDistanceBetween - distance;
+//                if (!firstMoving && secondMoving ) {
+//                    this.setX((int) (this.getX() - dx * overlap));
+//                    this.setY((int) (this.getY() - dy * overlap));
+//                    this.bounceOffWall();
+//                    this.addFriction();
+//                }
+//                else if (firstMoving && !secondMoving)
+//                {
+//                    collided.setX((int) (collided.getX() + dx * overlap));
+//                    collided.setY((int) (collided.getY() + dy * overlap));
+//                    collided.bounceOffWall();
+//                    collided.addFriction();
+//                }
+//                else
+//                {
+//                    this.setX((int) (this.getX() - dx * overlap / 2));
+//                    this.setY((int) (this.getY() - dy * overlap / 2));
+//                    collided.setX((int) (collided.getX() + dx * overlap / 2));
+//                    collided.setY((int) (collided.getY() + dy * overlap / 2));
+//                    this.bounceOffWall();
+//                    this.addFriction();
+//                    collided.addFriction();
+//                }
+//                int tempDx = this.getDx();
+//                int tempDy = this.getDy();
+//                this.setDy(collided.getDy());
+//                this.setDx(collided.getDx());
+//                collided.setDy(tempDy);
+//                collided.setDx(tempDx);
+//
+//            }
+        if (this.hasPocketed || collided.hasPocketed) {
             return;
         }
-        int minDistanceBetween = collided.getSize() + this.getSize();
-        int xCollisionNum = collided.getX() - this.getX();
-        int yCollisionNum = collided.getY() - this.getY();
 
-        int distance = (int) Math.sqrt(xCollisionNum * xCollisionNum + yCollisionNum * yCollisionNum);
-        if(distance < minDistanceBetween)
-        {
-            int tempDx = this.getDx();
-            int tempDy = this.getDy();
-            this.setDy(collided.getDy());
-            this.setDx(collided.getDx());
-            collided.setDy(tempDy);
-            collided.setDx(tempDx);
+        double minDist = this.getSize() + collided.getSize();
+        double dx = collided.getX() - this.getX();
+        double dy = collided.getY() - this.getY();
+        double dist = Math.sqrt(dx * dx + dy * dy);
+
+        if (dist < minDist && dist != 0) {
+            // Move balls apart so they don't overlap
+            double overlap = minDist - dist;
+            double nx = dx / dist;
+            double ny = dy / dist;
+
+            // Move each ball away from collision point by half the overlap
+            this.x -= (int)(nx * overlap / 2);
+            this.y -= (int)(ny * overlap / 2);
+            collided.x += (int)(nx * overlap / 2);
+            collided.y += (int)(ny * overlap / 2);
+
+            // --- Physics-based velocity calculation ---
+            // Current velocities
+            double v1x = this.getDx();
+            double v1y = this.getDy();
+            double v2x = collided.getDx();
+            double v2y = collided.getDy();
+
+            // Project velocities onto the normal and tangent directions
+            double v1n = v1x * nx + v1y * ny;
+            double v1t = -v1x * ny + v1y * nx;
+            double v2n = v2x * nx + v2y * ny;
+            double v2t = -v2x * ny + v2y * nx;
+
+            // Coefficient of restitution (energy loss)
+            double restitution = 0.93; // 1.0 = elastic, <1.0 = inelastic
+
+            // New normal velocities (1D collision equations, equal mass)
+            double v1nAfter = v2n * restitution;
+            double v2nAfter = v1n * restitution;
+
+            // Convert scalar normal/tangent velocities back to x/y
+            double newV1x = v1nAfter * nx - v1t * ny;
+            double newV1y = v1nAfter * ny + v1t * nx;
+            double newV2x = v2nAfter * nx - v2t * ny;
+            double newV2y = v2nAfter * ny + v2t * nx;
+
+            // Assign new velocities (rounded to int for your code)
+            this.setDx((int)newV1x);
+            this.setDy((int)newV1y);
+            collided.setDx((int)newV2x);
+            collided.setDy((int)newV2y);
         }
-
-        int overlap = (minDistanceBetween - distance) / 2;
-
-
-
     }
     // Draw
     public void draw(Graphics g)

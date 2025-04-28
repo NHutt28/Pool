@@ -26,12 +26,18 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             balls.add(new Ball(0,0,12, i, window));
         }
 
-        for(int i = 1; i < 6; i++)
+        int count = 0;
+        for(int i = 0; i < 5; i++)
         {
-            for(int j = 0; j < i; j++)
+            for(int j = 0; j <= i; j++)
             {
-                balls.get(i*(i-1) / 2 + j).setX(620 + (int) Math.sqrt(3) *(i * 16));
-                balls.get(i*(i-1) / 2 + j).setY(280 - (i*10) + (j * 20));
+                if(count >= balls.size())
+                {
+                    break;
+                }
+                balls.get(count).setX(620 + i * 21);
+                balls.get(count).setY(280 - (i*12) + (j * 24));
+                count++;
             }
 
         }
@@ -111,16 +117,21 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     // All implemented methods
     @Override
     public void actionPerformed(ActionEvent e) {
-        white.move();
+
         for(Ball b: balls)
         {
-            b.move();
             white.bounceOffBall(b);
             for(int i = 0; i < balls.size(); i++ )
             {
                 b.bounceOffBall(balls.get(i));
             }
         }
+
+        for(Ball b: balls)
+        {
+            b.move();
+        }
+        white.move();
         window.repaint();
     }
 
