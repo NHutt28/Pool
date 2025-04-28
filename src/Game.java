@@ -6,6 +6,7 @@ import java.util.ArrayList;
 public class Game implements MouseListener, MouseMotionListener, ActionListener {
 
     private final int NUM_BALLS = 16;
+    private final int Radius = 12;
 
     private Ball black;
     private Ball white;
@@ -19,11 +20,11 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public Game() {
 
         window = new GameView(this);
-        this.white = new Ball(250,280,12, window);
+        this.white = new Ball(250,280,Radius, window);
         this.balls = new ArrayList<Ball>();
 
-        for (int i = 1; i < 16; i++) {
-            balls.add(new Ball(0,0,12, i, window));
+        for (int i = 1; i < NUM_BALLS; i++) {
+            balls.add(new Ball(0,0,Radius, i, window));
         }
 
         int count = 0;
@@ -36,7 +37,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                     break;
                 }
                 balls.get(count).setX(620 + i * 21);
-                balls.get(count).setY(280 - (i*12) + (j * 24));
+                balls.get(count).setY(280 - (i*Radius) + (j * 2 * Radius));
                 count++;
             }
 
@@ -143,19 +144,24 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mousePressed(MouseEvent e) {
 
-        releaseX = white.getX();
-        releaseY = white.getY();
-        if(Math.sqrt((e.getX()-white.getX())*(e.getX()-white.getX())+((e.getY()-white.getY())*(e.getY()-white.getY()))) < white.getSize())
+        if(this.state == 0)
         {
-            moving = true;
-            startX = e.getX();
-            startY = e.getY();
+            state++;
+            window.repaint();
         }
         else
         {
-            moving = false;
+            releaseX = white.getX();
+            releaseY = white.getY();
+            if (Math.sqrt((e.getX() - white.getX()) * (e.getX() - white.getX()) + ((e.getY() - white.getY()) * (e.getY() - white.getY()))) < white.getSize()) {
+                moving = true;
+                startX = e.getX();
+                startY = e.getY();
+            } else {
+                moving = false;
+            }
+            window.repaint();
         }
-        window.repaint();
     }
 
     @Override

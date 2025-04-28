@@ -50,20 +50,38 @@ public class GameView extends JFrame {
     // Redrawing the balls
     public void myPaint(Graphics g)
     {
-        g.setColor(Color.BLACK);
-        g.fillRect(0,0, WINDOW_WIDTH, WINDOW_HEIGHT);
-        g.drawImage(table, 0,TITLE_BAR_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, this);
-        pool.getWhite().draw(g);
-        for (Ball b: pool.getBalls())
+        if(pool.getState() == 0)
         {
-            b.draw(g);
+            g.setColor(new Color(100,160,100));
+            g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+            g.setColor(new Color(0,0,0));
+
+            // Draws instructions
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.drawString("POOL", 400, 100);
+            g.setFont(new Font("Script", Font.BOLD, 16));
+            g.drawString("The classic 8 ball game", 350, 150);
+            g.drawString("Instructions: Click white ball and drag back to propel ", 20, 200);
+            g.drawString("it into other balls. Hit balls in pockets to make them", 460, 200);
+            g.drawString("disappear.", 20, 250);
+
+            g.drawString("Click to begin! ", 380, 400);
         }
-        if(pool.isMoving())
+        else if (pool.getState() == 1)
         {
-            g.setColor(Color.red);
-            g.drawLine(pool.getWhite().getX() + 1, pool.getWhite().getY() + 1, pool.getReleaseX() + 1, pool.getReleaseY()+1);
-            g.drawLine(pool.getWhite().getX(), pool.getWhite().getY(), pool.getReleaseX(), pool.getReleaseY());
-            g.setColor(Color.black);
-       }
+            g.setColor(Color.BLACK);
+            g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+            g.drawImage(table, 0, TITLE_BAR_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, this);
+            pool.getWhite().draw(g);
+            for (Ball b : pool.getBalls()) {
+                b.draw(g);
+            }
+            if (pool.isMoving()) {
+                g.setColor(Color.red);
+                g.drawLine(pool.getWhite().getX() + 1, pool.getWhite().getY() + 1, pool.getReleaseX() + 1, pool.getReleaseY() + 1);
+                g.drawLine(pool.getWhite().getX(), pool.getWhite().getY(), pool.getReleaseX(), pool.getReleaseY());
+                g.setColor(Color.black);
+            }
+        }
     }
 }
