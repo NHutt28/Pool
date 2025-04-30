@@ -250,7 +250,7 @@ public class Ball {
         double dy = collided.getY() - this.getY();
         double dist = Math.sqrt(dx * dx + dy * dy);
 
-        if (dist < minDist && dist != 0) {
+        if ((dist < minDist && dist != 0)) {
             // Move balls apart so they don't overlap
             double overlap = minDist - dist;
             double nx = dx / dist;
@@ -276,7 +276,7 @@ public class Ball {
             double v2t = -v2x * ny + v2y * nx;
 
             // Coefficient of restitution (energy loss)
-            double restitution = 0.97; // 1.0 = elastic, <1.0 = inelastic
+            double restitution = 0.99; // 1.0 = elastic, <1.0 = inelastic
 
             // New normal velocities (1D collision equations, equal mass)
             double v1nAfter = v2n * restitution;

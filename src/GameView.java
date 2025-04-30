@@ -8,7 +8,7 @@ public class GameView extends JFrame {
     public final int WINDOW_WIDTH = 896;
     public final int WINDOW_HEIGHT = 560;
     public final int TITLE_BAR_HEIGHT = 25;
-    public final int TABLE_LEFT = 60;
+    public final int TABLE_LEFT = 70;
     public final int TABLE_RIGHT = 820;
     public final int TABLE_TOP = 90;
     public final int TABLE_BOTTOM = 470;
@@ -63,7 +63,7 @@ public class GameView extends JFrame {
             g.drawString("The classic 8 ball game", 350, 150);
             g.drawString("Instructions: Click white ball and drag back to propel ", 20, 200);
             g.drawString("it into other balls. Hit balls in pockets to make them", 460, 200);
-            g.drawString("disappear.", 20, 250);
+            g.drawString("disappear.", 400, 250);
 
             g.drawString("Click to begin! ", 380, 400);
         }

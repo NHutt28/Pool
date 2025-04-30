@@ -170,8 +170,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         if(moving) {
             releaseY = e.getY();
             releaseX = e.getX();
-            white.setDy(startY - releaseY);
-            white.setDx(startX - releaseX);
+            white.setDy((startY - releaseY) / 2);
+            white.setDx((startX - releaseX) / 2);
         }
         moving = false;
 
