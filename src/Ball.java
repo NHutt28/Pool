@@ -110,7 +110,7 @@ public class Ball {
         //speed = (int) Math.sqrt((dx*dx) + dy*dy);
         //speed *= 0.9;
         speed = (long) Math.sqrt((dx*dx) + dy*dy) ;
-        speed *= 0.983;
+        speed *= 0.97;
         if (Math.abs(speed) < 0.5)
         {
             dx = 0;
@@ -276,7 +276,7 @@ public class Ball {
             double v2t = -v2x * ny + v2y * nx;
 
             // Coefficient of restitution (energy loss)
-            double restitution = 0.99; // 1.0 = elastic, <1.0 = inelastic
+            double restitution = 0.97; // 1.0 = elastic, <1.0 = inelastic
 
             // New normal velocities (1D collision equations, equal mass)
             double v1nAfter = v2n * restitution;
