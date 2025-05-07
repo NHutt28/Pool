@@ -1,8 +1,10 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class Ball {
 
+    public static ArrayList<Ball> pocketedBalls = new ArrayList<Ball>();
     private int x, y;
     private int dx, dy;
     private double angle;
@@ -35,7 +37,10 @@ public class Ball {
         this.hasPocketed = false;
         ballDraw = new ImageIcon("Resources/White Ball.png").getImage();
         this.window = window;
+        number = 20; // Random Number that doesn't overlap with any other
     }
+
+
 
     // Getters and Setters
     public int getX() {
@@ -44,6 +49,50 @@ public class Ball {
 
     public void setX(int x) {
         this.x = x;
+    }
+
+    public double getAngle() {
+        return angle;
+    }
+
+    public void setAngle(double angle) {
+        this.angle = angle;
+    }
+
+    public Image getBallDraw() {
+        return ballDraw;
+    }
+
+    public boolean isSolid() {
+        return isSolid;
+    }
+
+    public void setSolid(boolean solid) {
+        isSolid = solid;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
+    }
+
+    public long getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(long speed) {
+        this.speed = speed;
+    }
+
+    public GameView getWindow() {
+        return window;
+    }
+
+    public void setWindow(GameView window) {
+        this.window = window;
     }
 
     public int getY() {
@@ -100,6 +149,10 @@ public class Ball {
         this.x += dx;
         this.y += dy;
         isPocketed();
+        if(hasPocketed)
+        {
+            pocketedBalls.add(this);
+        }
         this.addFriction();
         bounceOffWall();
     }
@@ -163,7 +216,6 @@ public class Ball {
     {
         if(y - size < window.TABLE_TOP && x + size > window.TABLE_RIGHT)
         {
-
             this.hasPocketed = true;
         }
         else if(y - size < window.TABLE_TOP && x - size < window.TABLE_LEFT)
@@ -185,6 +237,19 @@ public class Ball {
         else if ((Math.abs(x - 420) <= size + 10) && y + size > window.TABLE_BOTTOM -5)
         {
             this.hasPocketed = true;
+        }
+
+        if(this.hasPocketed && this.number != 20)
+        {
+            pocketedBalls.add(this);
+        }
+        else if (this.hasPocketed && this.number == 20)
+        {
+            this.setX(250);
+            this.setY(280);
+            this.setDx(0);
+            this.setDy(0);
+            this.hasPocketed = false;
         }
         return hasPocketed;
     }

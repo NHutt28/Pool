@@ -8,7 +8,7 @@ public class GameView extends JFrame {
     public final int WINDOW_WIDTH = 896;
     public final int WINDOW_HEIGHT = 560;
     public final int TITLE_BAR_HEIGHT = 25;
-    public final int TABLE_LEFT = 70;
+    public final int TABLE_LEFT = 65;
     public final int TABLE_RIGHT = 820;
     public final int TABLE_TOP = 90;
     public final int TABLE_BOTTOM = 470;
@@ -82,6 +82,43 @@ public class GameView extends JFrame {
                 g.drawLine(pool.getWhite().getX(), pool.getWhite().getY(), pool.getReleaseX(), pool.getReleaseY());
                 g.setColor(Color.black);
             }
+        }
+        else if(pool.getState() == 2)
+        {
+            g.setColor(new Color(100,160,100));
+            g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+            g.setColor(new Color(0,0,0));
+
+            // Draws instructions
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+
+            if(pool.getPlayer2Group() == 2)
+            {
+                g.drawString("SOLIDS WIN!!", 380, 250);
+            }
+            else
+            {
+                g.drawString("STRIPES WIN!!", 380, 250);
+            }
+        }
+        else if(pool.getState() == 3)
+        {
+            g.setColor(new Color(100,160,100));
+            g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
+            g.setColor(new Color(0,0,0));
+
+            // Draws instructions
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+
+            if(pool.getPlayer1Group() == 1)
+            {
+                g.drawString("SOLIDS WIN!!", 380, 250);
+            }
+            else
+            {
+                g.drawString("STRIPES WIN!!", 380, 250);
+            }
+
         }
     }
 }

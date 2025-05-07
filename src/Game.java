@@ -16,13 +16,24 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private GameView window;
     private int startX, startY, releaseX, releaseY;
     private boolean moving;
+    private int currentPlayer;
+    private int player1Group;
+    private int player2Group;
+    private int player1Pocket;
+    private int player2Pocket;
+    private boolean groupsAssigned;
+    private boolean gameOver;
 
     public Game() {
 
         window = new GameView(this);
         this.white = new Ball(250,280,Radius, window);
         this.balls = new ArrayList<Ball>();
-
+        currentPlayer = 0;
+        player1Group = 0;
+        player2Group = 0;
+        groupsAssigned = false;
+        gameOver = false;
         for (int i = 1; i < NUM_BALLS; i++) {
             balls.add(new Ball(0,0,Radius, i, window));
         }
@@ -75,6 +86,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return releaseY;
     }
 
+    public int getPlayer2Group() {
+        return player2Group;
+    }
+
+
+    public int getPlayer1Group() {
+        return player1Group;
+    }
 
     public boolean isMoving() {
         return moving;
@@ -107,11 +126,79 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public void setWhite(Ball white) {
         this.white = white;
     }
-
     // Plays the actual game - allows people to hit balls
     public void playGame()
     {
+        if(gameOver)
+        {
+            gameEnd();
+        }
+        if (!groupsAssigned)
+        {
+            assignGroups();
+        }
+        checkWin();
 
+    }
+
+    public void checkWin()
+    {
+        player1Pocket = 0;
+        player2Pocket = 0;
+        for (Ball b : Ball.pocketedBalls) {
+            int num = b.getNumber();
+            if (player1Group == 1 && num >= 1 && num <= 7)
+            {
+                player1Pocket++;
+            }
+            else if (player1Group == 2 && num >= 9 && num <= 15)
+            {
+                player1Pocket++;
+            }
+            if (player2Group == 1 && num >= 1 && num <= 7)
+            {
+                player2Pocket++;
+            }
+            else if (player2Group == 2 && num >= 9 && num <= 15)
+            {
+                player2Pocket++;
+            }
+        }
+        if (player1Pocket == 7)
+        {
+            gameOver = true;
+            state = 3;
+        }
+        else if (player2Pocket == 7)
+        {
+            gameOver = true;
+            state = 2;
+        }
+    }
+    public void gameEnd()
+    {
+
+    }
+
+    public void assignGroups()
+    {
+            if(!Ball.pocketedBalls.isEmpty())
+            {
+                int num = Ball.pocketedBalls.get(0).getNumber();
+                if (num == 8)
+                {
+                    gameOver = true;
+                }
+                else if (num >= 1 && num <= 7)
+                {
+                    player1Group = 1;
+                    player2Group = 2;
+                }
+                else if (num >= 9 && num <= 15) {
+                    player1Group = 2;
+                    player2Group = 1;
+                }
+            }
     }
 
 
@@ -133,6 +220,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             b.move();
         }
         white.move();
+        window.repaint();
+        playGame();
         window.repaint();
     }
 
