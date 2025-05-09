@@ -149,10 +149,6 @@ public class Ball {
         this.x += dx;
         this.y += dy;
         isPocketed();
-        if(hasPocketed)
-        {
-            pocketedBalls.add(this);
-        }
         this.addFriction();
         bounceOffWall();
     }
@@ -214,11 +210,15 @@ public class Ball {
 
     public boolean isPocketed()
     {
+        if(this.hasPocketed)
+        {
+            return true;
+        }
         if(y - size < window.TABLE_TOP && x + size > window.TABLE_RIGHT)
         {
             this.hasPocketed = true;
         }
-        else if(y - size < window.TABLE_TOP && x - size < window.TABLE_LEFT)
+        else if(y - size < window.TABLE_TOP + 5 && x - size < window.TABLE_LEFT +5)
         {
             this.hasPocketed = true;
         }
@@ -226,7 +226,7 @@ public class Ball {
         {
             this.hasPocketed = true;
         }
-        else if(y + size > window.TABLE_BOTTOM && x - size < window.TABLE_LEFT)
+        else if(y + size > window.TABLE_BOTTOM - 5&& x - size < window.TABLE_LEFT + 5)
         {
             this.hasPocketed = true;
         }
@@ -245,6 +245,7 @@ public class Ball {
         }
         else if (this.hasPocketed && this.number == 20)
         {
+            Game.foulState = true;
             this.setX(250);
             this.setY(280);
             this.setDx(0);

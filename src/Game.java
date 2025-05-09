@@ -23,6 +23,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private int player2Pocket;
     private boolean groupsAssigned;
     private boolean gameOver;
+    private final int STRIPES = 2;
+    private final int SOLIDS = 1;
+    public static boolean foulState;
+
 
     public Game() {
 
@@ -34,6 +38,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         player2Group = 0;
         groupsAssigned = false;
         gameOver = false;
+        foulState = false;
         for (int i = 1; i < NUM_BALLS; i++) {
             balls.add(new Ball(0,0,Radius, i, window));
         }
@@ -103,6 +108,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         this.moving = moving;
     }
 
+    public boolean isFoulState() {
+        return foulState;
+    }
+
     public int getStartX() {
         return startX;
     }
@@ -147,19 +156,19 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         player2Pocket = 0;
         for (Ball b : Ball.pocketedBalls) {
             int num = b.getNumber();
-            if (player1Group == 1 && num >= 1 && num <= 7)
+            if (player1Group == SOLIDS && num >= 1 && num <= 7)
             {
                 player1Pocket++;
             }
-            else if (player1Group == 2 && num >= 9 && num <= 15)
+            else if (player1Group == STRIPES && num >= 9 && num <= 15)
             {
                 player1Pocket++;
             }
-            if (player2Group == 1 && num >= 1 && num <= 7)
+            if (player2Group == SOLIDS && num >= 1 && num <= 7)
             {
                 player2Pocket++;
             }
-            else if (player2Group == 2 && num >= 9 && num <= 15)
+            else if (player2Group == STRIPES && num >= 9 && num <= 15)
             {
                 player2Pocket++;
             }
@@ -174,6 +183,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             gameOver = true;
             state = 2;
         }
+        player1Pocket = 0;
+        player2Pocket = 0;
     }
     public void gameEnd()
     {
@@ -191,12 +202,12 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 }
                 else if (num >= 1 && num <= 7)
                 {
-                    player1Group = 1;
-                    player2Group = 2;
+                    player1Group = SOLIDS;
+                    player2Group = STRIPES;
                 }
                 else if (num >= 9 && num <= 15) {
-                    player1Group = 2;
-                    player2Group = 1;
+                    player1Group = STRIPES;
+                    player2Group = SOLIDS;
                 }
             }
     }
@@ -233,6 +244,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mousePressed(MouseEvent e) {
 
+
         if(this.state == 0)
         {
             state++;
@@ -240,14 +252,23 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         }
         else
         {
-            releaseX = white.getX();
-            releaseY = white.getY();
-            if (Math.sqrt((e.getX() - white.getX()) * (e.getX() - white.getX()) + ((e.getY() - white.getY()) * (e.getY() - white.getY()))) < white.getSize()) {
-                moving = true;
-                startX = e.getX();
-                startY = e.getY();
-            } else {
-                moving = false;
+            if(foulState)
+            {
+                window.repaint();
+                white.setX(e.getX());
+                white.setY(e.getY());
+                foulState = false;
+            }
+            else {
+                releaseX = white.getX();
+                releaseY = white.getY();
+                if (Math.sqrt((e.getX() - white.getX()) * (e.getX() - white.getX()) + ((e.getY() - white.getY()) * (e.getY() - white.getY()))) < white.getSize()) {
+                    moving = true;
+                    startX = e.getX();
+                    startY = e.getY();
+                } else {
+                    moving = false;
+                }
             }
             window.repaint();
         }

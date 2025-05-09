@@ -8,7 +8,7 @@ public class GameView extends JFrame {
     public final int WINDOW_WIDTH = 896;
     public final int WINDOW_HEIGHT = 560;
     public final int TITLE_BAR_HEIGHT = 25;
-    public final int TABLE_LEFT = 65;
+    public final int TABLE_LEFT = 60;
     public final int TABLE_RIGHT = 820;
     public final int TABLE_TOP = 90;
     public final int TABLE_BOTTOM = 470;
@@ -81,6 +81,13 @@ public class GameView extends JFrame {
                 g.drawLine(pool.getWhite().getX() + 1, pool.getWhite().getY() + 1, pool.getReleaseX() + 1, pool.getReleaseY() + 1);
                 g.drawLine(pool.getWhite().getX(), pool.getWhite().getY(), pool.getReleaseX(), pool.getReleaseY());
                 g.setColor(Color.black);
+            }
+            if(pool.isFoulState())
+            {
+                g.setFont(new Font("Arial", Font.BOLD, 40));
+                g.setColor(new Color(255,0,0));
+                g.drawString("Click to place ball", 300, 250);
+                g.setFont(new Font("Script", Font.BOLD, 16));
             }
         }
         else if(pool.getState() == 2)
