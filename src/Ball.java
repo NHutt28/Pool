@@ -4,7 +4,10 @@ import java.util.ArrayList;
 
 public class Ball {
 
+    // Every ball that's been pocketed
     public static ArrayList<Ball> pocketedBalls = new ArrayList<Ball>();
+
+    // Instance variables
     private int x, y;
     private int dx, dy;
     private double angle;
@@ -14,8 +17,10 @@ public class Ball {
     private Image ballDraw;
     private int size;
 
+    // Front-end
     private GameView window;
 
+    // Constructor for regular balls
     public Ball(int x, int y, int radius, int number, GameView window) {
         this.x = x;
         this.y = y;
@@ -27,6 +32,8 @@ public class Ball {
         ballDraw = new ImageIcon("Resources/" + number + "Ball.png").getImage();
         this.window = window;
     }
+
+    // Constructor for white ball
     public Ball(int x, int y, int radius, GameView window) {
         this.x = x;
         this.y = y;
@@ -36,7 +43,7 @@ public class Ball {
         this.hasPocketed = false;
         ballDraw = new ImageIcon("Resources/White Ball.png").getImage();
         this.window = window;
-        number = 20; // Random Number that doesn't overlap with any other
+        number = 20; // Random Number that doesn't overlap with any other regular ball
     }
 
 
@@ -82,14 +89,20 @@ public class Ball {
         return size;
     }
 
+    // Moves the ball
     public void move()
     {
         this.x += dx;
         this.y += dy;
+        // Checks if is pocketed
         isPocketed();
+        // Adds friction
         this.addFriction();
+        // Checks if need to bounce off wall
         bounceOffWall();
     }
+
+
     // Makes sure speed slows every time
     public void addFriction()
     {
@@ -98,6 +111,7 @@ public class Ball {
         //speed *= 0.9;
         speed = Math.sqrt((dx*dx) + dy*dy) ;
         speed *= 0.97;
+        // If speed gets to certain point, stop
         if (Math.abs(speed) < 0.5)
         {
             dx = 0;
@@ -105,47 +119,59 @@ public class Ball {
         }
         else
         {
+            // Dx and Dy are calculated by cos and sin values of speed
             angle = Math.atan2(dy, dx);
             dx = (int)(Math.cos(angle) * speed);
             dy = (int)(Math.sin(angle) * speed);
         }
     }
 
-    // Ball bounces off different things
+    // Ball bounces off walls
     public void bounceOffWall()
     {
+
+        // Cannot bounce if pocketed
         if(hasPocketed)
         {
             return;
         }
+
+        // Bounces off x values
         if (x - size < window.TABLE_LEFT || x + size > window.TABLE_RIGHT)
         {
-            // Reflects
+            // Check for doesn't go through wall
             if(x - size < window.TABLE_LEFT)
             {
                 x = size+window.TABLE_LEFT;
             }
+            // Makes sure doesn't pass through wall
             else
             {
                 x = window.TABLE_RIGHT;
             }
+            // simply bounces other way
             dx *= -1;
         }
         if (y - size < window.TABLE_TOP || y + size > window.TABLE_BOTTOM)
         {
+            // Checks if bounce off top
             if(y - size < window.TABLE_TOP)
             {
                 y = size+window.TABLE_TOP;
             }
+            // Doesn't go through bottom
             else
             {
                 y = window.TABLE_BOTTOM;
             }
+            // Bounces opposite way
             dy *= -1;
         }
+        // Calculates angle after reflection
         angle = Math.atan2(dy, dx);
     }
 
+    // Checks if ball is pocketed
     public boolean isPocketed()
     {
         if(this.hasPocketed)
@@ -153,6 +179,8 @@ public class Ball {
             return true;
         }
 
+
+        // ALL POCKETS THAT COULD POCKET BALL
         if(y - size < window.TABLE_TOP && x + size > window.TABLE_RIGHT)
         {
             this.hasPocketed = true;
@@ -178,11 +206,13 @@ public class Ball {
             this.hasPocketed = true;
         }
 
+        // Adds ball to pocketed balls
         if(this.hasPocketed && this.number != 20)
         {
             pocketedBalls.add(this);
             Game.turnPocketedBalls.add(this);
         }
+        // WHITE BALL FOUL IF POCKETED
         else if (this.hasPocketed && this.number == 20)
         {
             Game.foulState = true;
@@ -192,6 +222,8 @@ public class Ball {
             this.setDy(0);
             this.hasPocketed = false;
         }
+
+        // returns if it has pocketed
         return hasPocketed;
     }
 
@@ -304,6 +336,7 @@ public class Ball {
     // Draw
     public void draw(Graphics g)
     {
+        // Draws ball
         if(!hasPocketed)
         {
             g.drawImage(ballDraw, x - size, y - size, 2 * size, 2 * size, window);

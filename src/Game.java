@@ -4,10 +4,13 @@ import java.util.ArrayList;
 
 public class Game implements MouseListener, MouseMotionListener, ActionListener {
 
+    // Static and constants
     public static ArrayList<Ball> turnPocketedBalls;
     private final int NUM_BALLS = 16;
     private final int Radius = 12;
+    public static boolean foulState;
 
+    // Instance variables
     private Ball white;
     private ArrayList<Ball> balls;
     private int state;
@@ -25,9 +28,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private boolean turnInProgress;
     private final int STRIPES = 2;
     private final int SOLIDS = 1;
-    public static boolean foulState;
 
 
+
+    // Constructor
     public Game() {
         window = new GameView(this);
         this.white = new Ball(250,280,Radius, window);
@@ -40,10 +44,13 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         turnInProgress = false;
         turnCount = 0;
         turnPocketedBalls = new ArrayList<Ball>();
+
+
         for (int i = 1; i < NUM_BALLS; i++) {
             balls.add(new Ball(0,0,Radius, i, window));
         }
 
+        // Puts ball in triangle
         int count = 0;
         for(int i = 0; i < 5; i++)
         {
@@ -63,6 +70,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         this.window.addMouseListener(this);
         this.window.addMouseMotionListener(this);
         this.state = 0;
+        // Starts animation
         clock = new Timer(40, this);
         clock.start();
     }
@@ -103,15 +111,19 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     // Plays the actual game - allows people to hit balls
     public void playGame()
     {
+        // if 8ball gets pocketed basically
         if(gameOver)
         {
             gameEnd();
         }
+        // assigns solids and stripes
         if (!groupsAssigned)
         {
             assignGroups();
         }
         checkWin();
+
+        // Make sure each player turn count
         if(allBallsStopped() && turnInProgress)
         {
             evaluateTurn();
@@ -120,9 +132,12 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
 
     }
+
+    // Checks when player ends turn
     public void evaluateTurn()
     {
         for(Ball b: turnPocketedBalls) {
+            // Makes sure they didn't pocket the 8 ball
             if (b.getNumber()== 8)
             {
                 gameOver = true;
@@ -130,10 +145,14 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         }
         if (foulState || turnPocketedBalls.isEmpty())
         {
+            // Moves to next players turn
             turnCount++;
         }
+        // clears all balls
         turnPocketedBalls.clear();
     }
+
+    // Checks if any ball is moving
     public boolean allBallsStopped()
     {
         for (Ball b : balls) {
@@ -142,14 +161,18 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 return false;
             }
         }
+        // If something is moving it will return false
         return white.getDx() == 0 && white.getDy() == 0;
     }
+
+    // Checks if someone won
     public void checkWin()
     {
         player1Pocket = 0;
         player2Pocket = 0;
         for (Ball b : Ball.pocketedBalls) {
             int num = b.getNumber();
+            // Adds amount of pocketed balls to each side to check
             if (player1Group == SOLIDS && num >= 1 && num <= 7)
             {
                 player1Pocket++;
@@ -167,6 +190,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 player2Pocket++;
             }
         }
+        // Checks if any player won
         if (player1Pocket == 7 && balls.get(7).isPocketed() && turnCount % 2 == 0)
         {
             gameOver = true;
@@ -178,8 +202,10 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             state = 2;
         }
     }
+
     public void gameEnd()
     {
+        // Checks who pocketed early, and therefore lost
         if(turnCount % 2 == 1)
         {
             state = 3;
@@ -192,6 +218,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
 
     public void assignGroups()
     {
+
+        // assigns solids vs stripes based on what ball was pocketed first
             if(!Ball.pocketedBalls.isEmpty())
             {
                 int num = Ball.pocketedBalls.get(0).getNumber();
@@ -216,6 +244,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void actionPerformed(ActionEvent e) {
 
+        // Draws every ball
         for(Ball b: balls)
         {
             white.bounceOffBall(b);
@@ -229,6 +258,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         {
             b.move();
         }
+        // repaints after every ball moves
         white.move();
         window.repaint();
         playGame();
@@ -244,6 +274,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     public void mousePressed(MouseEvent e) {
 
 
+        // Makes sure can't move balls instruction screen
         if(this.state == 0)
         {
             state++;
@@ -251,6 +282,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         }
         else
         {
+            // Click to place ball when in foul
             if(foulState)
             {
                 window.repaint();
@@ -258,6 +290,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 white.setY(e.getY());
                 foulState = false;
             }
+            // Starts the ball movement mechanic
             else {
                 releaseX = white.getX();
                 releaseY = white.getY();
@@ -276,6 +309,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mouseReleased(MouseEvent e) {
 
+        // when mouse released causes ball to move based on distance of mouse vs ball
         if(moving) {
             releaseY = e.getY();
             releaseX = e.getX();
@@ -300,6 +334,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     @Override
     public void mouseDragged(MouseEvent e) {
 
+        // Continuously updates where mouse is after clicked
         if(moving)
         {
             releaseY = e.getY();
