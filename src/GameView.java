@@ -69,9 +69,16 @@ public class GameView extends JFrame {
         }
         else if (pool.getState() == 1)
         {
+
+
             g.setColor(Color.BLACK);
             g.fillRect(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
             g.drawImage(table, 0, TITLE_BAR_HEIGHT, WINDOW_WIDTH, WINDOW_HEIGHT, this);
+            g.setFont(new Font("Arial", Font.BOLD, 40));
+            g.setColor(Color.red);
+            g.drawString("Player " + (3 - (2 - pool.getTurnCount() % 2)) + " turn", 100,100);
+            g.setFont(new Font("Script", Font.BOLD, 16));
+            g.setColor(Color.black);
             pool.getWhite().draw(g);
             for (Ball b : pool.getBalls()) {
                 b.draw(g);
@@ -99,14 +106,7 @@ public class GameView extends JFrame {
             // Draws instructions
             g.setFont(new Font("Arial", Font.BOLD, 40));
 
-            if(pool.getPlayer2Group() == 2)
-            {
-                g.drawString("SOLIDS WIN!!", 380, 250);
-            }
-            else
-            {
-                g.drawString("STRIPES WIN!!", 380, 250);
-            }
+                g.drawString("PLAYER 2 WINS!!", 320, 250);
         }
         else if(pool.getState() == 3)
         {
@@ -116,16 +116,7 @@ public class GameView extends JFrame {
 
             // Draws instructions
             g.setFont(new Font("Arial", Font.BOLD, 40));
-
-            if(pool.getPlayer1Group() == 1)
-            {
-                g.drawString("SOLIDS WIN!!", 380, 250);
-            }
-            else
-            {
-                g.drawString("STRIPES WIN!!", 380, 250);
-            }
-
+            g.drawString("PLAYER 1 WINS!!", 320, 250);
         }
     }
 }

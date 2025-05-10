@@ -1,14 +1,13 @@
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
 
 public class Game implements MouseListener, MouseMotionListener, ActionListener {
 
+    public static ArrayList<Ball> turnPocketedBalls;
     private final int NUM_BALLS = 16;
     private final int Radius = 12;
 
-    private Ball black;
     private Ball white;
     private ArrayList<Ball> balls;
     private int state;
@@ -16,29 +15,31 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
     private GameView window;
     private int startX, startY, releaseX, releaseY;
     private boolean moving;
-    private int currentPlayer;
+    private int turnCount;
     private int player1Group;
     private int player2Group;
     private int player1Pocket;
     private int player2Pocket;
     private boolean groupsAssigned;
     private boolean gameOver;
+    private boolean turnInProgress;
     private final int STRIPES = 2;
     private final int SOLIDS = 1;
     public static boolean foulState;
 
 
     public Game() {
-
         window = new GameView(this);
         this.white = new Ball(250,280,Radius, window);
         this.balls = new ArrayList<Ball>();
-        currentPlayer = 0;
         player1Group = 0;
         player2Group = 0;
         groupsAssigned = false;
         gameOver = false;
         foulState = false;
+        turnInProgress = false;
+        turnCount = 0;
+        turnPocketedBalls = new ArrayList<Ball>();
         for (int i = 1; i < NUM_BALLS; i++) {
             balls.add(new Ball(0,0,Radius, i, window));
         }
@@ -71,16 +72,8 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return state;
     }
 
-    public void setState(int state) {
-        this.state = state;
-    }
-
     public ArrayList<Ball> getBalls() {
         return balls;
-    }
-
-    public void setBalls(ArrayList<Ball> balls) {
-        this.balls = balls;
     }
 
     public int getReleaseX() {
@@ -91,50 +84,22 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
         return releaseY;
     }
 
-    public int getPlayer2Group() {
-        return player2Group;
-    }
-
-
-    public int getPlayer1Group() {
-        return player1Group;
+    public int getTurnCount() {
+        return turnCount;
     }
 
     public boolean isMoving() {
         return moving;
     }
 
-    public void setMoving(boolean moving) {
-        this.moving = moving;
-    }
-
     public boolean isFoulState() {
         return foulState;
-    }
-
-    public int getStartX() {
-        return startX;
-    }
-
-    public void setStartX(int startX) {
-        this.startX = startX;
-    }
-
-    public int getStartY() {
-        return startY;
-    }
-
-    public void setStartY(int startY) {
-        this.startY = startY;
     }
 
     public Ball getWhite() {
         return white;
     }
 
-    public void setWhite(Ball white) {
-        this.white = white;
-    }
     // Plays the actual game - allows people to hit balls
     public void playGame()
     {
@@ -147,9 +112,38 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             assignGroups();
         }
         checkWin();
+        if(allBallsStopped() && turnInProgress)
+        {
+            evaluateTurn();
+            turnInProgress = false;
+        }
+
 
     }
-
+    public void evaluateTurn()
+    {
+        for(Ball b: turnPocketedBalls) {
+            if (b.getNumber()== 8)
+            {
+                gameOver = true;
+            }
+        }
+        if (foulState || turnPocketedBalls.isEmpty())
+        {
+            turnCount++;
+        }
+        turnPocketedBalls.clear();
+    }
+    public boolean allBallsStopped()
+    {
+        for (Ball b : balls) {
+            if (b.getDx() != 0 || b.getDy() != 0)
+            {
+                return false;
+            }
+        }
+        return white.getDx() == 0 && white.getDy() == 0;
+    }
     public void checkWin()
     {
         player1Pocket = 0;
@@ -173,22 +167,27 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
                 player2Pocket++;
             }
         }
-        if (player1Pocket == 7)
+        if (player1Pocket == 7 && balls.get(7).isPocketed() && turnCount % 2 == 0)
         {
             gameOver = true;
             state = 3;
         }
-        else if (player2Pocket == 7)
+        else if (player2Pocket == 7 && balls.get(7).isPocketed() && turnCount % 2 == 1)
         {
             gameOver = true;
             state = 2;
         }
-        player1Pocket = 0;
-        player2Pocket = 0;
     }
     public void gameEnd()
     {
-
+        if(turnCount % 2 == 1)
+        {
+            state = 3;
+        }
+        else
+        {
+            state = 2;
+        }
     }
 
     public void assignGroups()
@@ -282,6 +281,7 @@ public class Game implements MouseListener, MouseMotionListener, ActionListener 
             releaseX = e.getX();
             white.setDy((startY - releaseY) / 2);
             white.setDx((startX - releaseX) / 2);
+            turnInProgress = true;
         }
         moving = false;
 

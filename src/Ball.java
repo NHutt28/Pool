@@ -8,9 +8,8 @@ public class Ball {
     private int x, y;
     private int dx, dy;
     private double angle;
-    private long speed;
+    private double speed;
     private boolean hasPocketed;
-    private boolean isSolid;
     private int number;
     private Image ballDraw;
     private int size;
@@ -51,60 +50,12 @@ public class Ball {
         this.x = x;
     }
 
-    public double getAngle() {
-        return angle;
-    }
-
-    public void setAngle(double angle) {
-        this.angle = angle;
-    }
-
-    public Image getBallDraw() {
-        return ballDraw;
-    }
-
-    public boolean isSolid() {
-        return isSolid;
-    }
-
-    public void setSolid(boolean solid) {
-        isSolid = solid;
-    }
-
     public int getNumber() {
         return number;
     }
 
-    public void setNumber(int number) {
-        this.number = number;
-    }
-
-    public long getSpeed() {
-        return speed;
-    }
-
-    public void setSpeed(long speed) {
-        this.speed = speed;
-    }
-
-    public GameView getWindow() {
-        return window;
-    }
-
-    public void setWindow(GameView window) {
-        this.window = window;
-    }
-
     public int getY() {
         return y;
-    }
-
-    public Image getImage() {
-        return ballDraw;
-    }
-
-    public void setBallDraw(Image ballDraw) {
-        this.ballDraw = ballDraw;
     }
 
     public void setY(int y) {
@@ -127,22 +78,9 @@ public class Ball {
         this.dy = dy;
     }
 
-    public boolean isHasPocketed() {
-        return hasPocketed;
-    }
-
-    public void setHasPocketed(boolean hasPocketed) {
-        this.hasPocketed = hasPocketed;
-    }
-
     public int getSize() {
         return size;
     }
-
-    public void setSize(int size) {
-        this.size = size;
-    }
-
 
     public void move()
     {
@@ -158,7 +96,7 @@ public class Ball {
         // Pythagorean triangle
         //speed = (int) Math.sqrt((dx*dx) + dy*dy);
         //speed *= 0.9;
-        speed = (long) Math.sqrt((dx*dx) + dy*dy) ;
+        speed = Math.sqrt((dx*dx) + dy*dy) ;
         speed *= 0.97;
         if (Math.abs(speed) < 0.5)
         {
@@ -214,6 +152,7 @@ public class Ball {
         {
             return true;
         }
+
         if(y - size < window.TABLE_TOP && x + size > window.TABLE_RIGHT)
         {
             this.hasPocketed = true;
@@ -242,6 +181,7 @@ public class Ball {
         if(this.hasPocketed && this.number != 20)
         {
             pocketedBalls.add(this);
+            Game.turnPocketedBalls.add(this);
         }
         else if (this.hasPocketed && this.number == 20)
         {
